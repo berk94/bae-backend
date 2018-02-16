@@ -10,3 +10,5 @@ var customerSchema = new Schema({
  lastName: String,
  location: Location
 });
+
+module.exports = mongoose.model('Customer', customerSchema);

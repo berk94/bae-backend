@@ -6,6 +6,8 @@ var Location = require('./location');
 
 var delivererSchema = new Schema({
  _id: Schema.Types.ObjectId,
+ firstName: String,
+ lastName: String,
  weightCapacity: Number,
  volumeCapacity: Number,
  route: [
@@ -15,3 +17,5 @@ var delivererSchema = new Schema({
    }
  ]
 });
+
+module.exports = mongoose.model('Deliverer', delivererSchema);

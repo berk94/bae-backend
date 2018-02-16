@@ -5,8 +5,10 @@ var Schema = mongoose.Schema;
 
 var itemSchema = new Schema({
  _id: Schema.Types.ObjectId,
- orderID: Schema.Types.ObjectId,
+ name: String,
  weight: Number,
  volume: Number,
  price: Number
 });
+
+module.exports = mongoose.model('Item', itemSchema);
