@@ -8,5 +8,6 @@ var orderSchema = new Schema({
  delivererID: Schema.Types.ObjectId,
  customerID: Schema.Types.ObjectId,
  startDate: Date,
- endDate: Date
+ endDate: Date,
+ createdAt: { type: Date, default: Date.now }
 });
