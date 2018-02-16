@@ -2,6 +2,7 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 26
+    dataBinding.enabled = true
     defaultConfig {
         applicationId "com.kurye.kurye"
         minSdkVersion 17
@@ -16,12 +17,37 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
 }
-
+ext {
+    supportLibraryVersion = "26.1.0"
+    lifecycleArchitectureVersion = "1.1.0"
+    retrofitVersion = "2.3.0"
+    okHttpVersion = "3.8.0"
+}
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation 'com.android.support:appcompat-v7:26.1.0'
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    //support libraries
+    implementation "com.android.support:appcompat-v7:$supportLibraryVersion"
+    implementation "com.android.support:design:$supportLibraryVersion"
     implementation 'com.android.support.constraint:constraint-layout:1.0.2'
+    //Architecture Components
+    implementation "android.arch.lifecycle:extensions:$lifecycleArchitectureVersion"
+    annotationProcessor "android.arch.lifecycle:compiler:$lifecycleArchitectureVersion"
+
+    //Network
+    implementation "com.squareup.retrofit2:retrofit:$retrofitVersion"
+    implementation "com.squareup.retrofit2:converter-gson:$retrofitVersion"
+    implementation "com.squareup.okhttp3:logging-interceptor:$okHttpVersion"
+    implementation "com.squareup.okhttp3:okhttp:$okHttpVersion"
+    implementation "com.squareup.okhttp3:okhttp-urlconnection:$okHttpVersion"
+    implementation 'com.google.code.gson:gson:2.8.2'
+
+    //view libraries
+    implementation 'com.appeaser.sublimepickerlibrary:sublimepickerlibrary:2.1.1'
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.1'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
