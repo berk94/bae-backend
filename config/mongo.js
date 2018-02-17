@@ -1,6 +1,9 @@
 // look at env-example and fill env.js
+
+var env = undefined;
 try {
-    const env = require('./env');
+    env = require('./env');
+
 } catch (ex) {
     console.log("Could not find env file. Should be on server.");
 }
