@@ -4,6 +4,7 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
 var placeSchema = new Schema({
+ googlePlacesID: {type: String, required: [true, 'googlePlacesID is required.'], index:{unique:true}},
  name: {type: String, required: [true, 'name is required.']},
  latitude: {type: Number, required: [true, 'latitude is required.']},
  longitude: {type: Number, required: [true, 'longitude is required.']}
