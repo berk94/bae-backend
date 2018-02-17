@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.android.gms.location.places.AutocompleteFilter;
 import com.google.android.gms.location.places.ui.SupportPlaceAutocompleteFragment;
 import com.kurye.kurye.R;
 import com.kurye.kurye.screen.filter.dateRange.DateRangeFragment;
@@ -54,6 +55,8 @@ public class FilterActivityFragment extends Fragment {
         stepSecond.setLabel("Nereden");
         stepSecond.setSubLabel("New York, Tokio...");
         SupportPlaceAutocompleteFragment fragment = new SupportPlaceAutocompleteFragment();
+        AutocompleteFilter typeFilter = new AutocompleteFilter.Builder().setTypeFilter(AutocompleteFilter.TYPE_FILTER_CITIES).build();
+        fragment.setFilter(typeFilter);
         stepSecond.setFragment(fragment);
         stepSecond.setPositiveButtonEnable(true);
 
