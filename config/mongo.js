@@ -1,15 +1,24 @@
 // look at env-example and fill env.js
 
-var env = undefined;
+var dbuser;
+var dbpassword;
+var mlaburl;
+
 try {
-    env = require('./env');
+  console.log('Custom env');
+  env = require('./env');
+  dbuser = env.MONGO.dbuser;
+  dbpassword = env.MONGO.dbpassword;
+  mlaburl = env.MONGO.mlab_url;
 
 } catch (ex) {
-    console.log("Could not find env file. Should be on server.");
+  console.log('Process env');
+  dbuser = process.env.MONGOUSER;
+  dbpassword = process.env.MONGOPASSWORD;
+  mlaburl = process.env.MLABURL;
 }
-var dbuser = process.env.MONGOUSER || env.MONGO.dbuser;
-var dbpassword = process.env.MONGOPASSWORD || env.MONGO.dbpassword;
+
 module.exports = {
-  url : "mongodb://" + dbuser + ":" + dbpassword + "@" + env.MONGO.mlab_url,
+  url : "mongodb://" + dbuser + ":" + dbpassword + "@" + mlaburl,
   seedDB: true
 };
