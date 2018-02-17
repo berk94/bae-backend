@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.android.gms.location.places.ui.SupportPlaceAutocompleteFragment;
 import com.kurye.kurye.R;
 import com.kurye.kurye.screen.filter.dateRange.DateRangeFragment;
 import com.kurye.kurye.screen.filter.editText.EditTextFragment;
@@ -44,6 +45,7 @@ public class FilterActivityFragment extends Fragment {
         SteppersItem stepFirst = new SteppersItem();
         stepFirst.setLabel("Ne");
         stepFirst.setSubLabel("telefon, bilgisayar...");
+
         stepFirst.setFragment(EditTextFragment.newInstance("Ne Almak İstiyorsunuz?"));
         stepFirst.setPositiveButtonEnable(true);
         steps.add(stepFirst);
@@ -51,7 +53,8 @@ public class FilterActivityFragment extends Fragment {
         SteppersItem stepSecond = new SteppersItem();
         stepSecond.setLabel("Nereden");
         stepSecond.setSubLabel("New York, Tokio...");
-        stepSecond.setFragment(EditTextFragment.newInstance("Nereden Almak İstiyorsunuz?"));
+        SupportPlaceAutocompleteFragment fragment = new SupportPlaceAutocompleteFragment();
+        stepSecond.setFragment(fragment);
         stepSecond.setPositiveButtonEnable(true);
 
         steps.add(stepSecond);
