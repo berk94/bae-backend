@@ -1,7 +1,7 @@
 # Kurye
 Bitaksi Getir Semih Ozturk 2018 Hackathon
 
-We build Kurye upon the second suggestion. Extra features we added / going to add are:
+We built Kurye upon the second suggestion. Extra features we added / going to add are:
 - Multiple predefined items with different weights and volumes
 - Predefined travelers with different source and destination cities
 - Item, source and destination cities, date, and traveler selection during ordering
@@ -16,6 +16,5 @@ We build Kurye upon the second suggestion. Extra features we added / going to ad
 - [mlab](https://mlab.com): MongoDB Database Service
 
 ## Dependencies
-- [redis](https://github.com/NodeRedis/node_redis)
 - [mongoose](https://github.com/Automattic/mongoose)
 - [nodemon](https://github.com/remy/nodemon)
