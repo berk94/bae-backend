@@ -2,13 +2,16 @@
 
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
-var Location = require('./location');
+var Place = require('./place');
 
 var customerSchema = new Schema({
- _id: Schema.Types.ObjectId,
  firstName: String,
  lastName: String,
- location: Location
+ place: {type: Schema.Types.ObjectId, ref: "Place"}
 });
+
+customerSchema.statics.all = function(cb) {
+    return this.find({}, cb);
+  };
 
 module.exports = mongoose.model('Customer', customerSchema);

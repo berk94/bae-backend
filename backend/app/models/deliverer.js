@@ -2,20 +2,23 @@
 
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
-var Location = require('./location');
+var Place = require('./place');
 
 var delivererSchema = new Schema({
- _id: Schema.Types.ObjectId,
  firstName: String,
  lastName: String,
  weightCapacity: Number,
  volumeCapacity: Number,
  route: [
    {
-     location: Location,
+     place: {type: Schema.Types.ObjectId, ref: "Place"},
      date: Date
    }
  ]
 });
+
+delivererSchema.statics.all = function(cb) {
+    return this.find({}, cb);
+  };
 
 module.exports = mongoose.model('Deliverer', delivererSchema);

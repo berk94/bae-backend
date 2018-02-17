@@ -1,14 +1,17 @@
 'use strict';
 
-var mongoose = require('mongoose');
+const mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
 var itemSchema = new Schema({
- _id: Schema.Types.ObjectId,
  name: String,
  weight: Number,
  volume: Number,
  price: Number
 });
+
+itemSchema.statics.all = function(cb) {
+    return this.find({}, cb);
+  };
 
 module.exports = mongoose.model('Item', itemSchema);
