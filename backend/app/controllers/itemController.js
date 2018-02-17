@@ -5,15 +5,18 @@ const Response = require('../models/response');
 
 // Display list of all items.
 exports.item_list = function(req, res) {
-    Item.all(function(err,items) {
-      var response = new Response();
-      response.sendResponse(res, err, items);
-    });
+  Item.all(function(err,items) {
+    var response = new Response();
+    response.sendResponse(res, err, items);
+  });
 };
 
 // Display detail page for a specific item.
 exports.item_detail = function(req, res) {
-    res.send('NOT IMPLEMENTED: Item detail: ' + req.params.id);
+  Item.findById(req.params.id, function(err,data){
+    var response = new Response;
+    response.sendResponse(res, err, data);
+  });
 };
 
 // Create item
@@ -27,18 +30,22 @@ exports.item_create = function(req, res) {
 
 // Delete all items
 exports.delete_all = function(req, res) {
-  Item.remove({}, function(err, data){
-    var response = new Response;
-    response.sendResponse(res, err, data);
-  })
+  res.send('Ups you almost deleted all items!');
+  // Item.remove({}, function(err, data){
+  //   var response = new Response;
+  //   response.sendResponse(res, err, data);
+  // })
 };
 
 // Delete a specific item
 exports.delete = function(req, res) {
-    res.send('NOT IMPLEMENTED: Delete a specific item');
+  Item.findByIdAndRemove (req.params.id, function(err,data){
+    var response = new Response;
+    response.sendResponse(res, err, data);
+  });
 };
 
 // Update a specific item
 exports.item_update = function(req, res) {
-    res.send('NOT IMPLEMENTED: Update a specific item');
+  res.send('NOT IMPLEMENTED: Update a specific item');
 };
