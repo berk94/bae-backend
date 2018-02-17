@@ -5,8 +5,8 @@ var Schema = mongoose.Schema;
 var Place = require('./place');
 
 var customerSchema = new Schema({
- firstName: String,
- lastName: String,
+ firstName: {type: String, required: [true, 'firstName is required.']},
+ lastName: {type: String, required: [true, 'lastName is required.']},
 });
 
 customerSchema.statics.all = function(cb) {

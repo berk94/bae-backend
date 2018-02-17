@@ -10,8 +10,8 @@ var orderSchema = new Schema({
  itemID: {type: Schema.Types.ObjectId, ref: "Item"},
  delivererID: {type: Schema.Types.ObjectId, ref: "Deliverer"},
  customerID: {type: Schema.Types.ObjectId, ref: "Customer"},
- startDate: Date,
- endDate: Date,
+ startDate: {type: Date, required: [true, 'startDate is required.']},
+ endDate: {type: Date, required: [true, 'startDate is required.']},
  createdAt: { type: Date, default: Date.now }
 });
 

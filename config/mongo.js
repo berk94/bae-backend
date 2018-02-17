@@ -5,8 +5,8 @@ var dbpassword;
 var mlaburl;
 
 try {
-  console.log('Custom env');
   env = require('./env');
+  console.log('Custom env');
   dbuser = env.MONGO.dbuser;
   dbpassword = env.MONGO.dbpassword;
   mlaburl = env.MONGO.mlab_url;
