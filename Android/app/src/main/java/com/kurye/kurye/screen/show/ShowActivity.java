@@ -2,38 +2,34 @@ package com.kurye.kurye.screen.show;
 
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
-import android.graphics.Bitmap;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.DrawableRes;
 import android.support.annotation.StyleRes;
-import android.support.v4.view.ViewCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.view.Gravity;
 import android.view.View;
-import android.view.ViewGroup.LayoutParams;
-import android.view.ViewTreeObserver;
-import android.widget.ImageSwitcher;
-import android.widget.ImageView;
 import android.widget.TextSwitcher;
 import android.widget.TextView;
 import android.widget.ViewSwitcher;
 
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.kurye.kurye.R;
 import com.kurye.kurye.screen.filter.FilterActivity;
 import com.kurye.kurye.screen.show.cards.SliderAdapter;
-import com.kurye.kurye.screen.show.utils.DecodeBitmapTask;
 import com.ramotion.cardslider.CardSliderLayoutManager;
 import com.ramotion.cardslider.CardSnapHelper;
 
-import java.util.Random;
+public class ShowActivity extends AppCompatActivity implements OnMapReadyCallback {
+    private GoogleMap mMap;
 
-public class ShowActivity extends AppCompatActivity {
-
-    private final int[][] dotCoords = new int[5][2];
     private final int[] pics = {R.drawable.p1, R.drawable.p2, R.drawable.p3, R.drawable.p4, R.drawable.p5};
-    private final int[] maps = {R.drawable.map_paris, R.drawable.map_seoul, R.drawable.map_london, R.drawable.map_beijing, R.drawable.map_greece};
     private final int[] descriptions = {R.string.text1, R.string.text2, R.string.text3, R.string.text4, R.string.text5};
     private final String[] countries = {"PARIS", "SEOUL", "LONDON", "BEIJING", "THIRA"};
     private final String[] places = {"The Louvre", "Gwanghwamun", "Tower Bridge", "Temple of Heaven", "Aegeana Sea"};
@@ -42,12 +38,9 @@ public class ShowActivity extends AppCompatActivity {
 
 
     private CardSliderLayoutManager layoutManger;
-    private RecyclerView recyclerView;
-    private ImageSwitcher mapSwitcher;
     private TextSwitcher placeSwitcher;
     private TextSwitcher clockSwitcher;
     private TextSwitcher descriptionsSwitcher;
-    private View greenDot;
 
     private TextView country1TextView;
     private TextView country2TextView;
@@ -56,22 +49,24 @@ public class ShowActivity extends AppCompatActivity {
     private long countryAnimDuration;
     private int currentPosition;
 
-    private DecodeBitmapTask decodeMapBitmapTask;
-    private DecodeBitmapTask.Listener mapLoadListener;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_show);
-
+        initMap();
         initRecyclerView();
         initCountryText();
         initSwitchers();
-        initGreenDot();
+    }
+
+    private void initMap() {
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.map);
+        mapFragment.getMapAsync(this);
     }
 
     private void initRecyclerView() {
-        recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
+        RecyclerView recyclerView = findViewById(R.id.recycler_view);
         recyclerView.setAdapter(sliderAdapter);
         recyclerView.setHasFixedSize(true);
 
@@ -87,14 +82,6 @@ public class ShowActivity extends AppCompatActivity {
         layoutManger = (CardSliderLayoutManager) recyclerView.getLayoutManager();
 
         new CardSnapHelper().attachToRecyclerView(recyclerView);
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        if (isFinishing() && decodeMapBitmapTask != null) {
-            decodeMapBitmapTask.cancel(true);
-        }
     }
 
     private void initSwitchers() {
@@ -113,20 +100,6 @@ public class ShowActivity extends AppCompatActivity {
         descriptionsSwitcher.setOutAnimation(this, android.R.anim.fade_out);
         descriptionsSwitcher.setFactory(new TextViewFactory(R.style.DescriptionTextView, false));
         descriptionsSwitcher.setCurrentText(getString(descriptions[0]));
-
-        mapSwitcher = (ImageSwitcher) findViewById(R.id.ts_map);
-        mapSwitcher.setInAnimation(this, R.anim.fade_in);
-        mapSwitcher.setOutAnimation(this, R.anim.fade_out);
-        mapSwitcher.setFactory(new ImageViewFactory());
-        mapSwitcher.setImageResource(maps[0]);
-
-        mapLoadListener = new DecodeBitmapTask.Listener() {
-            @Override
-            public void onPostExecuted(Bitmap bitmap) {
-                ((ImageView) mapSwitcher.getNextView()).setImageBitmap(bitmap);
-                mapSwitcher.showNext();
-            }
-        };
     }
 
     private void initCountryText() {
@@ -141,33 +114,6 @@ public class ShowActivity extends AppCompatActivity {
         country1TextView.setText(countries[0]);
         country2TextView.setAlpha(0f);
 
-    }
-
-    private void initGreenDot() {
-        mapSwitcher.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-            @Override
-            public void onGlobalLayout() {
-                mapSwitcher.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-
-                final int viewLeft = mapSwitcher.getLeft();
-                final int viewTop = mapSwitcher.getTop() + mapSwitcher.getHeight() / 3;
-
-                final int border = 100;
-                final int xRange = Math.max(1, mapSwitcher.getWidth() - border * 2);
-                final int yRange = Math.max(1, (mapSwitcher.getHeight() / 3) * 2 - border * 2);
-
-                final Random rnd = new Random();
-
-                for (int i = 0, cnt = dotCoords.length; i < cnt; i++) {
-                    dotCoords[i][0] = viewLeft + border + rnd.nextInt(xRange);
-                    dotCoords[i][1] = viewTop + border + rnd.nextInt(yRange);
-                }
-
-                greenDot = findViewById(R.id.green_dot);
-                greenDot.setX(dotCoords[0][0]);
-                greenDot.setY(dotCoords[0][1]);
-            }
-        });
     }
 
     private void setCountryText(String text, boolean left2right) {
@@ -237,26 +183,23 @@ public class ShowActivity extends AppCompatActivity {
 
         descriptionsSwitcher.setText(getString(descriptions[pos % descriptions.length]));
 
-        showMap(maps[pos % maps.length]);
-
-        ViewCompat.animate(greenDot)
-                .translationX(dotCoords[pos % dotCoords.length][0])
-                .translationY(dotCoords[pos % dotCoords.length][1])
-                .start();
+        showMap(Math.random() * 180 - 90, Math.random() * 180 - 90);
 
         currentPosition = pos;
     }
 
-    private void showMap(@DrawableRes int resId) {
-        if (decodeMapBitmapTask != null) {
-            decodeMapBitmapTask.cancel(true);
+    private Marker previousMarker;
+
+    private void showMap(double latitude, double longitude) {
+        LatLng newPlace = new LatLng(latitude, longitude);
+        if (previousMarker != null) {
+            previousMarker.remove();
         }
-
-        final int w = mapSwitcher.getWidth();
-        final int h = mapSwitcher.getHeight();
-
-        decodeMapBitmapTask = new DecodeBitmapTask(getResources(), resId, w, h, mapLoadListener);
-        decodeMapBitmapTask.execute();
+        MarkerOptions position = new MarkerOptions()
+                .position(newPlace)
+                .anchor(0, -1.0f);
+        previousMarker = mMap.addMarker(position);
+        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(newPlace, 7));
     }
 
     private class TextViewFactory implements ViewSwitcher.ViewFactory {
@@ -290,17 +233,9 @@ public class ShowActivity extends AppCompatActivity {
 
     }
 
-    private class ImageViewFactory implements ViewSwitcher.ViewFactory {
-        @Override
-        public View makeView() {
-            final ImageView imageView = new ImageView(ShowActivity.this);
-            imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-
-            final LayoutParams lp = new ImageSwitcher.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
-            imageView.setLayoutParams(lp);
-
-            return imageView;
-        }
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        mMap = googleMap;
     }
 
 }
