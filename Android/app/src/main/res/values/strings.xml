@@ -12,6 +12,14 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="select_item_label">Ne</string>
+    <string name="select_item_description">telefon, bilgisayar...</string>
+    <string name="select_item_question">Ne Almak İstiyorsunuz?</string>
+    <string name="select_from_city_label">Nereden</string>
+    <string name="select_city_description">New York, Tokyo...</string>
+    <string name="select_to_city_label">Nereye</string>
+    <string name="select_time_label">Ne Zaman</string>
+    <string name="select_time_description">Bugün, yarın...</string>
 
     <string name="text1">The museum is housed in the Louvre Palace, originally built as a fortress in the late 12th century…</string>
     <string name="text2">Gwanghwamun is the main and largest gate of Gyeongbokgung Palace, in Jongno-gu, Seoul, South Korea.</string>
