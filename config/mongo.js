@@ -1,7 +1,9 @@
 // look at env-example and fill env.js
 const env = require('./env');
+var dbuser = process.env.MONGOUSER || env.MONGO.dbuser;
+var dbpassword = process.env.MONGOPASSWORD || env.MONGO.dbpassword;
 
 module.exports = {
-  url : "mongodb://" + env.MONGO.dbuser + ":" + env.MONGO.dbpassword + "@" + env.MONGO.mlab_url,
+  url : "mongodb://" + dbuser + ":" + dbpassword + "@" + env.MONGO.mlab_url,
   seedDB: true
 };
