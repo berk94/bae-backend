@@ -1,0 +1,14 @@
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <data>
+
+        <variable
+            name="vm"
+            type="com.kurye.kurye.screen.filter.editText.VMEditTextFragment" />
+    </data>
+
+    <EditText
+        style="@style/etNumber"
+        android:hint="@{vm.hint}"
+        android:text="@{vm.text}" />
+</layout>

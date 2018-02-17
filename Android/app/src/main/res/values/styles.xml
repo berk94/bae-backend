@@ -1,0 +1,32 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+
+        <!-- SublimePicker attributes -->
+        <item name="spHeaderBackgroundPtr">@color/background</item>
+        <item name="spCalendarDayTextColorPtr">@color/day_item_color</item>
+        <item name="spPrimaryTextSecondaryWhenActivatedMaterialInversePtr">@color/date_item_color
+        </item>
+        <item name="spNumbersTextColorPtr">@color/day_item_color</item>
+        <item name="spNumbersInnerTextColorPtr">@color/day_item_color</item>
+        <item name="spNumbersBackgroundColorPtr">@color/background</item>
+    </style>
+
+    <style name="etNumber">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:imeOptions">actionSend</item>
+        <item name="android:minWidth">200dp</item>
+
+    </style>
+
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
+</resources>
