@@ -2,9 +2,7 @@ package com.kurye.kurye.network;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.kurye.kurye.entity.response.ItemEntity;
-
-import java.util.List;
+import com.kurye.kurye.entity.response.ItemResponse;
 
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
@@ -26,16 +24,9 @@ public class NetworkApi {
     private final NetworkService service;
 
 
-    public static NetworkApi getInstance() {
-        if (instance == null) {
-            instance = new NetworkApi();
-        }
-        return instance;
-    }
-
     private NetworkApi() {
         HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor();
-        loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.HEADERS);
+        loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
 
         OkHttpClient.Builder clientBuilder = new OkHttpClient().newBuilder().addNetworkInterceptor(loggingInterceptor);
 
@@ -53,8 +44,14 @@ public class NetworkApi {
         service = retrofit.create(NetworkService.class);
     }
 
+    public static NetworkApi getInstance() {
+        if (instance == null) {
+            instance = new NetworkApi();
+        }
+        return instance;
+    }
 
-    public void getItems(NetworkCallback<List<ItemEntity>> callback) {
+    public void getItems(NetworkCallback<ItemResponse> callback) {
         sendRequest(service.getItems(), callback);
     }
 

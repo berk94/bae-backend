@@ -4,6 +4,7 @@ import android.support.annotation.IntDef;
 import android.support.annotation.NonNull;
 
 import com.kurye.kurye.entity.response.ItemEntity;
+import com.kurye.kurye.entity.response.ItemResponse;
 import com.kurye.kurye.network.NetworkApi;
 import com.kurye.kurye.network.NetworkCallback;
 
@@ -18,6 +19,8 @@ import java.util.List;
  * Created by ahmet on 2/4/2018.
  */
 public class ItemTask {
+    public static final int FAIL = 0;
+    public static final int SUCCESS = 1;
     private static ItemTask instance;
     private List<ItemEntity> items;
 
@@ -28,26 +31,18 @@ public class ItemTask {
         return instance;
     }
 
-    public int pageCount(){
-        if (itemsIsEmpty())return 0;
-        return (int) Math.ceil(items.size()/10.0);
-    }
-
-    public List<ItemEntity> load(int i){
-        if (itemsIsEmpty()||i>=pageCount())return null;
-        int fromIndex = i * 10;
-        int toIndex = Math.min((i+1) * 10, items.size());
-        return items.subList(fromIndex,toIndex);
+    public List<ItemEntity> load() {
+        return items;
     }
 
     public void fetch(@NonNull SearchResultListener listener) {
-        NetworkApi.getInstance().getItems(new NetworkCallback<List<ItemEntity>>() {
+        NetworkApi.getInstance().getItems(new NetworkCallback<ItemResponse>() {
             @Override
-            public void onSuccess(List<ItemEntity> response) {
-                if (response==null||response.isEmpty()){
+            public void onSuccess(ItemResponse response) {
+                if (response == null || response.getCode() != 200) {
                     listener.onResult(FAIL,"No Matching Results");
                 } else {
-                    items = response;
+                    items = response.getData();
                     listener.onResult(SUCCESS,null);
                 }
             }
@@ -65,11 +60,8 @@ public class ItemTask {
     }
 
     public boolean itemsIsEmpty() {
-        return items ==null|| items.isEmpty();
+        return items == null || items.isEmpty();
     }
-
-    public static final int FAIL = 0;
-    public static final int SUCCESS = 1;
     @IntDef({FAIL, SUCCESS})
     @Retention(RetentionPolicy.SOURCE)
     public @interface Status {}

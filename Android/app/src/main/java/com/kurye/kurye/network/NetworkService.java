@@ -1,12 +1,10 @@
 package com.kurye.kurye.network;
 
 
-import com.kurye.kurye.entity.response.ItemEntity;
-
-import java.util.List;
+import com.kurye.kurye.entity.response.ItemResponse;
 
 import retrofit2.Call;
-import retrofit2.http.POST;
+import retrofit2.http.GET;
 
 /**
  * Basic retrofit service interface.
@@ -16,6 +14,6 @@ import retrofit2.http.POST;
  */
 public interface NetworkService {
 
-    @POST(NetworkConstants.ITEMS)
-    Call<List<ItemEntity>> getItems();
+    @GET(NetworkConstants.ITEMS)
+    Call<ItemResponse> getItems();
 }

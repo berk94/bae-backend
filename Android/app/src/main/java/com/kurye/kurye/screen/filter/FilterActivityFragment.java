@@ -3,13 +3,18 @@ package com.kurye.kurye.screen.filter;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.places.AutocompleteFilter;
+import com.google.android.gms.location.places.Place;
+import com.google.android.gms.location.places.ui.PlaceSelectionListener;
 import com.google.android.gms.location.places.ui.SupportPlaceAutocompleteFragment;
 import com.kurye.kurye.R;
+import com.kurye.kurye.entity.response.LocationEntity;
 import com.kurye.kurye.screen.filter.dateRange.DateRangeFragment;
 import com.kurye.kurye.screen.filter.editText.EditTextFragment;
 
@@ -24,6 +29,11 @@ import me.drozdzynski.library.steppers.SteppersView;
 public class FilterActivityFragment extends Fragment {
 
     private SteppersView steppersView;
+
+    private String itemID;
+    private LocationEntity fromLocation;
+    private LocationEntity toLocation;
+    private String date;
 
     public FilterActivityFragment() {
     }
@@ -61,6 +71,19 @@ public class FilterActivityFragment extends Fragment {
         AutocompleteFilter typeFilterFrom = new AutocompleteFilter.Builder().setTypeFilter(AutocompleteFilter.TYPE_FILTER_CITIES).build();
         fragmentFrom.setFilter(typeFilterFrom);
         stepSecond.setFragment(fragmentFrom);
+        fragmentFrom.setOnPlaceSelectedListener(new PlaceSelectionListener() {
+            @Override
+            public void onPlaceSelected(Place place) {
+                Log.e("id", place.getId());
+                Log.e("long", "" + place.getLatLng().longitude);
+                Log.e("lat", "" + place.getLatLng().latitude);
+            }
+
+            @Override
+            public void onError(Status status) {
+
+            }
+        });
         stepSecond.setPositiveButtonEnable(true);
         steps.add(stepSecond);
 
@@ -84,8 +107,6 @@ public class FilterActivityFragment extends Fragment {
         steps.add(stepFourth);
         return steps;
     }
-
-    private int stepPosition = 0;
 
     @NonNull
     private SteppersView.Config getConfig() {
