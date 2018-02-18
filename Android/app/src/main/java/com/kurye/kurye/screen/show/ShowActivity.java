@@ -4,6 +4,7 @@ import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.arch.lifecycle.ViewModelProviders;
 import android.databinding.DataBindingUtil;
+import android.databinding.Observable;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.StyleRes;
@@ -24,8 +25,6 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.kurye.kurye.R;
 import com.kurye.kurye.databinding.ActivityShowBinding;
-import com.ramotion.cardslider.CardSliderLayoutManager;
-import com.ramotion.cardslider.CardSnapHelper;
 
 public class ShowActivity extends AppCompatActivity implements OnMapReadyCallback {
     private GoogleMap mMap;
@@ -49,10 +48,16 @@ public class ShowActivity extends AppCompatActivity implements OnMapReadyCallbac
         ActivityShowBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_show);
 
         vmShowActivity = ViewModelProviders.of(this).get(VMShowActivity.class);
+        vmShowActivity.getPosition().addOnPropertyChangedCallback(new Observable.OnPropertyChangedCallback() {
+            @Override
+            public void onPropertyChanged(Observable observable, int i) {
+                onActiveCardChange(vmShowActivity.getPosition().get());
+            }
+        });
         binding.setVmShow(vmShowActivity);
+
         binding.executePendingBindings();
         initMap();
-        initRecyclerView();
         initCountryText();
         initSwitchers();
 
@@ -64,23 +69,6 @@ public class ShowActivity extends AppCompatActivity implements OnMapReadyCallbac
         mapFragment.getMapAsync(this);
     }
 
-    private void initRecyclerView() {
-        RecyclerView recyclerView = findViewById(R.id.recycler_view);
-        recyclerView.setHasFixedSize(true);
-
-        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-                if (newState == RecyclerView.SCROLL_STATE_IDLE) {
-                    onActiveCardChange(
-                            ((CardSliderLayoutManager)recyclerView.getLayoutManager())
-                                    .getActiveCardPosition());
-                }
-            }
-        });
-
-        new CardSnapHelper().attachToRecyclerView(recyclerView);
-    }
 
     private void initSwitchers() {
 
