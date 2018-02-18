@@ -13,7 +13,7 @@ public class CreateOrderRequest {
     @SerializedName("customerID")
     @Expose
     private String customerID;
-    @SerializedName("itemId")
+    @SerializedName("itemID")
     @Expose
     private String itemId;
     @SerializedName("deliveryDate")

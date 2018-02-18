@@ -3,12 +3,12 @@ package com.kurye.kurye.screen.selectDeliverer;
 import android.app.Application;
 import android.arch.lifecycle.AndroidViewModel;
 import android.databinding.ObservableArrayList;
+import android.databinding.ObservableField;
 import android.databinding.ObservableInt;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
-import com.kurye.kurye.common.ViewUtils;
 import com.kurye.kurye.entity.request.CreateOrderRequest;
 import com.kurye.kurye.entity.request.SearchDeliverersRequest;
 import com.kurye.kurye.entity.response.DelivererEntity;
@@ -28,7 +28,8 @@ public class VMSelectDeliverer extends AndroidViewModel {
     private RecyclerView.OnScrollListener scrollListener;
     private ObservableArrayList<DelivererVM> deliverers = new ObservableArrayList<>();
     private ObservableInt position = new ObservableInt();
-    private ObservableInt communication = new ObservableInt();
+    private ObservableInt communication = new ObservableInt(-1);
+    private ObservableField<String> error = new ObservableField<>();
 
     public VMSelectDeliverer(@NonNull Application application) {
         super(application);
@@ -72,20 +73,15 @@ public class VMSelectDeliverer extends AndroidViewModel {
         createOrderRequest.setCustomerID("5a8950f45b9fa82aa90664ff");
         createOrderRequest.setDelivererID(deliverers.get(0).getId().get());
         OrderTask.getInstance().fetch(createOrderRequest, (status, message) -> {
-            if (status==OrderTask.SUCCESS){
-                ViewUtils.showAlertDialog(getApplication(), "Success", (dialog, which) -> {
-                    communication.set(1);
-                });
-            } else {
-                ViewUtils.showAlertDialog(getApplication(), message, (dialog, which) -> {
-                    communication.set(1);
-                });
-
-            }
+            communication.set(status);
         });
     }
 
     public ObservableInt getCommunication() {
         return communication;
+    }
+
+    public ObservableField<String> getError() {
+        return error;
     }
 }

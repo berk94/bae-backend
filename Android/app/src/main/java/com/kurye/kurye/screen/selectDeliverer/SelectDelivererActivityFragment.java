@@ -23,8 +23,10 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.kurye.kurye.R;
+import com.kurye.kurye.common.ViewUtils;
 import com.kurye.kurye.common.view.TextViewFactory;
 import com.kurye.kurye.databinding.FragmentSelectDelivererBinding;
+import com.kurye.kurye.task.OrderTask;
 
 /**
  * Created by elifguler on 18.02.2018.
@@ -66,8 +68,10 @@ public class SelectDelivererActivityFragment extends Fragment implements OnMapRe
         vmSelectDeliverer.getCommunication().addOnPropertyChangedCallback(new Observable.OnPropertyChangedCallback() {
             @Override
             public void onPropertyChanged(Observable observable, int i) {
-                if (vmSelectDeliverer.getCommunication().get()==1){
-                    getActivity().finish();
+                if (vmSelectDeliverer.getCommunication().get() == OrderTask.SUCCESS) {
+                    ViewUtils.showAlertDialog(getActivity(), "Success", (dialog, which) -> getActivity().finish());
+                } else {
+                    ViewUtils.showAlertDialog(getActivity(), vmSelectDeliverer.getError().get(), (dialog, which) -> getActivity().finish());
                 }
             }
         });

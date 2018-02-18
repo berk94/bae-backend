@@ -38,7 +38,7 @@ public class FilterTask extends Task{
         NetworkApi.getInstance().getDeliverers(searchDeliverersRequest, new NetworkCallback<BaseResponse<List<DelivererEntity>>>() {
             @Override
             public void onSuccess(BaseResponse<List<DelivererEntity>> response) {
-                if (response == null || response.getCode() != 200) {
+                if (response == null || response.getCode() != 200 || response.getData() == null || response.getData().isEmpty()) {
                     listener.onResult(FAIL, "No Matching Results");
                 } else {
                     deliverers = response.getData();
