@@ -9,11 +9,14 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
 import com.kurye.kurye.R;
+import com.kurye.kurye.entity.response.ItemEntity;
+import com.kurye.kurye.entity.response.OrderEntity;
 import com.kurye.kurye.screen.filter.FilterActivity;
+import com.kurye.kurye.task.ItemTask;
+import com.kurye.kurye.task.OrderTask;
 import com.kurye.kurye.viewEntity.OrderVM;
 import com.ramotion.cardslider.CardSliderLayoutManager;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -23,7 +26,7 @@ import java.util.List;
 public class VMShowActivity extends AndroidViewModel {
     private RecyclerView.OnScrollListener scrollListener;
     private ObservableArrayList<OrderVM> orders = new ObservableArrayList<>();
-    private ObservableInt position = new ObservableInt();
+    private ObservableInt position = new ObservableInt(-1);
     public VMShowActivity(@NonNull Application application) {
         super(application);
         scrollListener = new RecyclerView.OnScrollListener() {
@@ -36,18 +39,33 @@ public class VMShowActivity extends AndroidViewModel {
                 }
             }
         };
-        List<OrderVM> list = new ArrayList<>();
-        list.add(new OrderVM("The Louvre", "Aug 1 - Dec 15    7:00-18:00", "PARIS",
-                application.getString(R.string.text1), R.drawable.p1));
-        list.add(new OrderVM("Gwanghwamun", "Aug 1 - Dec 15    7:00-18:00", "SEOUL",
-                application.getString(R.string.text2), R.drawable.p2));
-        list.add(new OrderVM("Tower Bridge", "Sep 5 - Nov 10    8:00-16:00", "LONDON",
-                application.getString(R.string.text3), R.drawable.p3));
-        list.add(new OrderVM("Temple of Heaven", "Mar 8 - May 21    7:00-18:00", "BEIJING",
-                application.getString(R.string.text4), R.drawable.p4));
-        list.add(new OrderVM("Aegeana Sea", "Mar 10 - May 21    7:00-18:00", "THIRA",
-                application.getString(R.string.text5), R.drawable.p5));
-        orders.addAll(list);
+        ItemTask.getInstance().fetch((status, message) -> {
+            if (status == ItemTask.SUCCESS) {
+                OrderTask.getInstance().get("5a8950f45b9fa82aa90664ff", (status2, message2) -> {
+                    if (status2 == OrderTask.SUCCESS) {
+                        List<OrderEntity> load = OrderTask.getInstance().load();
+                        for (OrderEntity orderEntity : load) {
+                            ItemEntity itemEntity = orderEntity.getItemEntity();
+                            if (itemEntity != null) {
+                                OrderVM orderVM = new OrderVM(
+                                        itemEntity.getName(),
+                                        itemEntity.getName(),
+                                        itemEntity.getPrice() + " Dollars\n " +
+                                                itemEntity.getVolume() + " lt",
+                                        orderEntity.getCustomerID(),
+                                        R.drawable.p1);
+
+                                orders.add(orderVM);
+                            }
+
+                        }
+                        if (!orders.isEmpty()) {
+                            position.set(0);
+                        }
+                    }
+                });
+            }
+        });
     }
 
     public ObservableArrayList<OrderVM> getOrders() {

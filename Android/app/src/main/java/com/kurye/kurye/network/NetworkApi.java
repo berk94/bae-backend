@@ -70,6 +70,10 @@ public class NetworkApi {
         sendRequest(service.createOrder(createOrderRequest), callback);
     }
 
+    public void getOrders(String customerId, NetworkCallback<BaseResponse<List<OrderEntity>>> networkCallback) {
+        sendRequest(service.getOrders(customerId), networkCallback);
+    }
+
     private <R> void sendRequest(Call<R> call, final NetworkCallback<R> callBack) {
         Callback<R> requestCallback = new Callback<R>() {
             @Override
@@ -94,5 +98,4 @@ public class NetworkApi {
         };
         call.enqueue(requestCallback);
     }
-
 }

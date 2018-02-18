@@ -14,6 +14,7 @@ import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
+import retrofit2.http.Path;
 
 /**
  * Basic retrofit service interface.
@@ -31,4 +32,7 @@ public interface NetworkService {
 
     @POST(NetworkConstants.CREATE_ORDER)
     Call<BaseResponse<OrderEntity>> createOrder(@Body CreateOrderRequest createOrderRequest);
+
+    @GET(NetworkConstants.ORDERS + "{customerID}")
+    Call<BaseResponse<List<OrderEntity>>> getOrders(@Path("customerID") String customerId);
 }

@@ -72,7 +72,7 @@ public class VMSelectDeliverer extends AndroidViewModel {
         createOrderRequest.setDeliveryDate(FilterTask.getInstance().load().get(0).getDeliveryDate());
         createOrderRequest.setCustomerID("5a8950f45b9fa82aa90664ff");
         createOrderRequest.setDelivererID(deliverers.get(0).getId().get());
-        OrderTask.getInstance().fetch(createOrderRequest, (status, message) -> {
+        OrderTask.getInstance().create(createOrderRequest, (status, message) -> {
             communication.set(status);
         });
     }

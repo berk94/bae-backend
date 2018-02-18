@@ -37,6 +37,7 @@ public class ShowActivity extends AppCompatActivity implements OnMapReadyCallbac
     private int currentPosition;
     private Marker currentMarker;
     private VMShowActivity vmShowActivity;
+    private boolean first = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,16 +48,19 @@ public class ShowActivity extends AppCompatActivity implements OnMapReadyCallbac
         vmShowActivity.getPosition().addOnPropertyChangedCallback(new Observable.OnPropertyChangedCallback() {
             @Override
             public void onPropertyChanged(Observable observable, int i) {
-                onActiveCardChange(vmShowActivity.getPosition().get());
+                int pos = vmShowActivity.getPosition().get();
+                if (pos == 0 && first) {
+                    initCountryText();
+                    initSwitchers();
+                    first = false;
+                }
+                onActiveCardChange(pos);
             }
         });
         binding.setVmShow(vmShowActivity);
 
         binding.executePendingBindings();
         initMap();
-        initCountryText();
-        initSwitchers();
-
     }
 
     private void initMap() {
