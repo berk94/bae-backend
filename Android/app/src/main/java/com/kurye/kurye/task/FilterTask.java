@@ -2,8 +2,9 @@ package com.kurye.kurye.task;
 
 import android.support.annotation.NonNull;
 
+import com.kurye.kurye.entity.request.SearchDeliverersRequest;
 import com.kurye.kurye.entity.response.BaseResponse;
-import com.kurye.kurye.entity.response.ItemEntity;
+import com.kurye.kurye.entity.response.DelivererEntity;
 import com.kurye.kurye.network.NetworkApi;
 import com.kurye.kurye.network.NetworkCallback;
 
@@ -11,29 +12,30 @@ import java.util.List;
 
 
 /**
- * Item interacter. Used for managing item data.
+ * Item interacter. Used for managing deliverer data.
  * <p>
  * Created by ahmet on 2/4/2018.
  */
-public class ItemTask extends Task {
-    private static ItemTask instance;
-    private List<ItemEntity> items;
+public class FilterTask extends Task{
 
-    public static ItemTask getInstance() {
+    private static FilterTask instance;
+    private List<DelivererEntity> items;
+
+    public static FilterTask getInstance() {
         if (instance == null) {
-            instance = new ItemTask();
+            instance = new FilterTask();
         }
         return instance;
     }
 
-    public List<ItemEntity> load() {
+    public List<DelivererEntity> load() {
         return items;
     }
 
-    public void fetch(@NonNull OnResultListener listener) {
-        NetworkApi.getInstance().getItems(new NetworkCallback<BaseResponse<List<ItemEntity>>>() {
+    public void fetch(SearchDeliverersRequest searchDeliverersRequest, @NonNull OnResultListener listener) {
+        NetworkApi.getInstance().getDeliverers(searchDeliverersRequest, new NetworkCallback<BaseResponse<List<DelivererEntity>>>() {
             @Override
-            public void onSuccess(BaseResponse<List<ItemEntity>> response) {
+            public void onSuccess(BaseResponse<List<DelivererEntity>> response) {
                 if (response == null || response.getCode() != 200) {
                     listener.onResult(FAIL, "No Matching Results");
                 } else {

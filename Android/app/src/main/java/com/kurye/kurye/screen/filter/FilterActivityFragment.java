@@ -17,8 +17,10 @@ import com.google.android.gms.location.places.ui.SupportPlaceAutocompleteFragmen
 import com.kurye.kurye.R;
 import com.kurye.kurye.common.DateUtils;
 import com.kurye.kurye.common.ViewUtils;
+import com.kurye.kurye.entity.request.SearchDeliverersRequest;
 import com.kurye.kurye.screen.filter.dateRange.DateRangeFragment;
 import com.kurye.kurye.screen.filter.editText.EditTextFragment;
+import com.kurye.kurye.task.FilterTask;
 
 import java.util.ArrayList;
 
@@ -30,12 +32,8 @@ import me.drozdzynski.library.steppers.interfaces.OnFinishAction;
  * A placeholder fragment containing a simple view.
  */
 public class FilterActivityFragment extends Fragment {
+    private SearchDeliverersRequest searchDeliverersRequest;
 
-    private String itemID;
-    private String toLocationId;
-    private String fromLocationId;
-    private String startDate;
-    private String endDate;
     private SteppersView steppersView;
     private OnFinishAction onFinishAction;
 
@@ -46,6 +44,7 @@ public class FilterActivityFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_filter, container, false);
+        searchDeliverersRequest = new SearchDeliverersRequest();
         setupSteppersView(v);
         return v;
     }
@@ -84,10 +83,10 @@ public class FilterActivityFragment extends Fragment {
         stepFirst.setSubLabel(getString(R.string.select_item_description));
 
         EditTextFragment editTextFragment = EditTextFragment.newInstance(getString(R.string.select_item_question));
-        editTextFragment.setListener(entity -> itemID = entity.getId());
+        editTextFragment.setListener(entity -> searchDeliverersRequest.setItemID(entity.getId()));
         stepFirst.setFragment(editTextFragment);
         stepFirst.setOnClickContinue(() -> {
-            if (TextUtils.isEmpty(itemID)) {
+            if (TextUtils.isEmpty(searchDeliverersRequest.getItemID())) {
                 ViewUtils.getSnackbar(getActivity(), "Ne almak istediğini bilmeden sana yardımcı olamam :)").show();
             } else {
                 steppersView.nextStep();
@@ -107,17 +106,17 @@ public class FilterActivityFragment extends Fragment {
         fragmentFrom.setOnPlaceSelectedListener(new PlaceSelectionListener() {
             @Override
             public void onPlaceSelected(Place place) {
-                fromLocationId = place.getId();
+                searchDeliverersRequest.setFromLocationID(place.getId());
             }
 
             @Override
             public void onError(Status status) {
-                fromLocationId = null;
+                searchDeliverersRequest.setFromLocationID(null);
             }
         });
         stepSecond.setFragment(fragmentFrom);
         stepSecond.setOnClickContinue(() -> {
-            if (TextUtils.isEmpty(fromLocationId)) {
+            if (TextUtils.isEmpty(searchDeliverersRequest.getFromLocationID())) {
                 ViewUtils.getSnackbar(getActivity(), "Nereden almak istediğini bilmeden sana yardımcı olamam :)").show();
             } else {
                 steppersView.nextStep();
@@ -137,17 +136,17 @@ public class FilterActivityFragment extends Fragment {
         fragmentTo.setOnPlaceSelectedListener(new PlaceSelectionListener() {
             @Override
             public void onPlaceSelected(Place place) {
-                toLocationId = place.getId();
+                searchDeliverersRequest.setToLocationID(place.getId());
             }
 
             @Override
             public void onError(Status status) {
-                toLocationId = null;
+                searchDeliverersRequest.setToLocationID(null);
             }
         });
         stepThird.setFragment(fragmentTo);
         stepThird.setOnClickContinue(() -> {
-            if (TextUtils.isEmpty(toLocationId)) {
+            if (TextUtils.isEmpty(searchDeliverersRequest.getToLocationID())) {
                 ViewUtils.getSnackbar(getActivity(), "Nereye almak istediğini bilmeden sana yardımcı olamam :)").show();
             } else {
                 steppersView.nextStep();
@@ -165,10 +164,11 @@ public class FilterActivityFragment extends Fragment {
         stepFourth.setFragment(dateRangeFragment);
         onFinishAction = () -> {
             SelectedDate date = dateRangeFragment.getDate();
-            startDate = DateUtils.formatDateToString(date.getStartDate());
-            endDate = DateUtils.formatDateToString(date.getEndDate());
+            searchDeliverersRequest.setStartDate(DateUtils.formatDateToString(date.getStartDate()));
+            searchDeliverersRequest.setEndDate(DateUtils.formatDateToString(date.getEndDate()));
 
-            if (TextUtils.isEmpty(startDate) || TextUtils.isEmpty(startDate)) {
+            if (TextUtils.isEmpty(searchDeliverersRequest.getStartDate()) ||
+                    TextUtils.isEmpty(searchDeliverersRequest.getEndDate())) {
                 ViewUtils.getSnackbar(getActivity(), "Ne zaman almak istediğini bilmeden sana yardımcı olamam :)").show();
             } else {
                 sendFilterRequest();
@@ -178,6 +178,8 @@ public class FilterActivityFragment extends Fragment {
     }
 
     private void sendFilterRequest() {
-
+        FilterTask.getInstance().fetch(searchDeliverersRequest, (status, message) -> {
+            System.out.println("FilterActivityFragment.sendFilterRequest " + message+ ","+ status);
+        });
     }
 }
