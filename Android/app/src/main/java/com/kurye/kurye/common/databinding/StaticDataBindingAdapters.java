@@ -36,7 +36,7 @@ public class StaticDataBindingAdapters {
                 }
             });
         } else {
-            ((BaseAdapter) rv.getAdapter()).updateData(items);
+            ((BaseAdapter<T>) rv.getAdapter()).updateData(items);
         }
     }
 

@@ -7,7 +7,6 @@ import android.databinding.DataBindingUtil;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.StyleRes;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.view.Gravity;
@@ -25,8 +24,6 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.kurye.kurye.R;
 import com.kurye.kurye.databinding.ActivityShowBinding;
-import com.kurye.kurye.screen.filter.FilterActivity;
-import com.kurye.kurye.viewEntity.OrderVM;
 import com.ramotion.cardslider.CardSliderLayoutManager;
 import com.ramotion.cardslider.CardSnapHelper;
 
@@ -75,8 +72,9 @@ public class ShowActivity extends AppCompatActivity implements OnMapReadyCallbac
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                 if (newState == RecyclerView.SCROLL_STATE_IDLE) {
-                    onActiveCardChange(((CardSliderLayoutManager)
-                            recyclerView.getLayoutManager()).getActiveCardPosition());
+                    onActiveCardChange(
+                            ((CardSliderLayoutManager)recyclerView.getLayoutManager())
+                                    .getActiveCardPosition());
                 }
             }
         });
