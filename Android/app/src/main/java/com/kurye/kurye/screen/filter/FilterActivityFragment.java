@@ -20,6 +20,7 @@ import com.kurye.kurye.common.ViewUtils;
 import com.kurye.kurye.entity.request.SearchDeliverersRequest;
 import com.kurye.kurye.screen.filter.dateRange.DateRangeFragment;
 import com.kurye.kurye.screen.filter.editText.EditTextFragment;
+import com.kurye.kurye.screen.selectDeliverer.SelectDelivererActivity;
 import com.kurye.kurye.task.FilterTask;
 
 import java.util.ArrayList;
@@ -180,6 +181,8 @@ public class FilterActivityFragment extends Fragment {
     private void sendFilterRequest() {
         FilterTask.getInstance().fetch(searchDeliverersRequest, (status, message) -> {
             System.out.println("FilterActivityFragment.sendFilterRequest " + message+ ","+ status);
+            SelectDelivererActivity.start(getContext());
+            getActivity().finish();
         });
     }
 }
