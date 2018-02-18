@@ -2,10 +2,12 @@ package com.kurye.kurye.network;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.kurye.kurye.entity.request.CreateOrderRequest;
 import com.kurye.kurye.entity.request.SearchDeliverersRequest;
 import com.kurye.kurye.entity.response.BaseResponse;
 import com.kurye.kurye.entity.response.DelivererEntity;
 import com.kurye.kurye.entity.response.ItemEntity;
+import com.kurye.kurye.entity.response.OrderEntity;
 
 import java.util.List;
 
@@ -62,6 +64,10 @@ public class NetworkApi {
 
     public void getDeliverers(SearchDeliverersRequest searchDeliverersRequest, NetworkCallback<BaseResponse<List<DelivererEntity>>> callback) {
         sendRequest(service.searchDeliverers(searchDeliverersRequest), callback);
+    }
+
+    public void createOrder(CreateOrderRequest createOrderRequest, NetworkCallback<BaseResponse<OrderEntity>> callback) {
+        sendRequest(service.createOrder(createOrderRequest), callback);
     }
 
     private <R> void sendRequest(Call<R> call, final NetworkCallback<R> callBack) {

@@ -15,10 +15,12 @@ import java.util.List;
 public class DelivererVM extends ViewModel {
     private ObservableField<String> name = new ObservableField<>();
     private ObservableArrayList<RouteEntity> routes = new ObservableArrayList<>();
+    private ObservableField<String> id = new ObservableField<>();
 
-    public DelivererVM(String name, List<RouteEntity> routes) {
+    public DelivererVM(String name, List<RouteEntity> routes, String id) {
         this.name.set(name);
         this.routes.addAll(routes);
+        this.id.set(id);
     }
 
     public ObservableField<String> getName() {
@@ -27,5 +29,9 @@ public class DelivererVM extends ViewModel {
 
     public ObservableArrayList<RouteEntity> getRoutes() {
         return routes;
+    }
+
+    public ObservableField<String> getId() {
+        return id;
     }
 }

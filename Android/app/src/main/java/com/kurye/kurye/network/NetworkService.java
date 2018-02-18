@@ -1,10 +1,12 @@
 package com.kurye.kurye.network;
 
 
+import com.kurye.kurye.entity.request.CreateOrderRequest;
 import com.kurye.kurye.entity.request.SearchDeliverersRequest;
 import com.kurye.kurye.entity.response.BaseResponse;
 import com.kurye.kurye.entity.response.DelivererEntity;
 import com.kurye.kurye.entity.response.ItemEntity;
+import com.kurye.kurye.entity.response.OrderEntity;
 
 import java.util.List;
 
@@ -26,4 +28,7 @@ public interface NetworkService {
 
     @POST(NetworkConstants.SEARCH_DELIVERERS)
     Call<BaseResponse<List<DelivererEntity>>> searchDeliverers(@Body SearchDeliverersRequest searchDeliverersRequest);
+
+    @POST(NetworkConstants.CREATE_ORDER)
+    Call<BaseResponse<OrderEntity>> createOrder(@Body CreateOrderRequest createOrderRequest);
 }

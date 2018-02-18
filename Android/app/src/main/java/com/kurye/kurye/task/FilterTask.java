@@ -12,14 +12,15 @@ import java.util.List;
 
 
 /**
- * Item interacter. Used for managing deliverer data.
+ * Deliverer interacter. Used for managing deliverer data.
  * <p>
  * Created by ahmet on 2/4/2018.
  */
 public class FilterTask extends Task{
 
     private static FilterTask instance;
-    private List<DelivererEntity> items;
+    private List<DelivererEntity> deliverers;
+    private SearchDeliverersRequest searchDeliverersRequest;
 
     public static FilterTask getInstance() {
         if (instance == null) {
@@ -29,17 +30,18 @@ public class FilterTask extends Task{
     }
 
     public List<DelivererEntity> load() {
-        return items;
+        return deliverers;
     }
 
     public void fetch(SearchDeliverersRequest searchDeliverersRequest, @NonNull OnResultListener listener) {
+        this.searchDeliverersRequest = searchDeliverersRequest;
         NetworkApi.getInstance().getDeliverers(searchDeliverersRequest, new NetworkCallback<BaseResponse<List<DelivererEntity>>>() {
             @Override
             public void onSuccess(BaseResponse<List<DelivererEntity>> response) {
                 if (response == null || response.getCode() != 200) {
                     listener.onResult(FAIL, "No Matching Results");
                 } else {
-                    items = response.getData();
+                    deliverers = response.getData();
                     listener.onResult(SUCCESS, null);
                 }
             }
@@ -57,7 +59,10 @@ public class FilterTask extends Task{
     }
 
     public boolean itemsIsEmpty() {
-        return items == null || items.isEmpty();
+        return deliverers == null || deliverers.isEmpty();
     }
 
+    public SearchDeliverersRequest getSearchDeliverersRequest() {
+        return searchDeliverersRequest;
+    }
 }

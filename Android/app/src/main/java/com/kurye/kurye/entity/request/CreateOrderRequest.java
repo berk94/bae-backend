@@ -1,14 +1,12 @@
-package com.kurye.kurye.entity.response;
+
+package com.kurye.kurye.entity.request;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-import java.util.Date;
 
-public class OrderEntity {
-    @SerializedName("_id")
-    @Expose
-    private String id;
+public class CreateOrderRequest {
+
     @SerializedName("delivererID")
     @Expose
     private String delivererID;
@@ -20,21 +18,7 @@ public class OrderEntity {
     private String itemId;
     @SerializedName("deliveryDate")
     @Expose
-    private Date deliveryDate;
-    @SerializedName("createdAt")
-    @Expose
-    private Date createdAt;
-    @SerializedName("__v")
-    @Expose
-    private int v;
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
+    private String deliveryDate;
 
     public String getDelivererID() {
         return delivererID;
@@ -60,20 +44,12 @@ public class OrderEntity {
         this.itemId = itemId;
     }
 
-
-    public Date getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(Date createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public Date getDeliveryDate() {
+    public String getDeliveryDate() {
         return deliveryDate;
     }
 
-    public void setDeliveryDate(Date deliveryDate) {
+    public void setDeliveryDate(String deliveryDate) {
         this.deliveryDate = deliveryDate;
     }
+
 }

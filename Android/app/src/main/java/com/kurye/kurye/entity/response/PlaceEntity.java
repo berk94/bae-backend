@@ -17,6 +17,9 @@ public class PlaceEntity {
     @SerializedName("longitude")
     @Expose
     private double longitude;
+    @SerializedName("__v")
+    @Expose
+    private int v;
 
     public String getGooglePlacesID() {
         return googlePlacesID;

@@ -10,4 +10,5 @@ class NetworkConstants {
 
     public static final String ITEMS = "items/";
     public static final String SEARCH_DELIVERERS = "searchDeliverers";
+    public static final String CREATE_ORDER = "order";
 }
