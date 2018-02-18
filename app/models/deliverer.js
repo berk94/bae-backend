@@ -7,6 +7,7 @@ var Place = require('./place');
 var delivererSchema = new Schema({
   firstName: {type: String, required: [true, 'firstName is required.']},
   lastName: {type: String, required: [true, 'lastName is required.']},
+  imageURL: {type: String},
   weightCapacity:{type: Number, required: [true, 'weightCapacity is required.']},
   volumeCapacity: {type: Number, required: [true, 'volumeCapacity is required.']},
   route: [
