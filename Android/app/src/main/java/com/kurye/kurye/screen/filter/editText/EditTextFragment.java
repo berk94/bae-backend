@@ -40,12 +40,12 @@ public class EditTextFragment extends Fragment {
         FragmentEditTextBinding binding = FragmentEditTextBinding.inflate(inflater, container, false);
         VMEditTextFragment vmEditTextFragment = ViewModelProviders.of(this).get(VMEditTextFragment.class);
 
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(),
+                android.R.layout.simple_dropdown_item_1line);
         ItemTask.getInstance().fetch((status, message) -> {
             if (status == ItemTask.SUCCESS) {
                 vmEditTextFragment.getEnabled().set(true);
                 List<ItemEntity> load = ItemTask.getInstance().load();
-                ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(),
-                        android.R.layout.simple_dropdown_item_1line);
                 for (ItemEntity itemEntity : load) {
                     adapter.add(itemEntity.getName());
                 }
