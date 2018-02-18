@@ -34,4 +34,16 @@ public class DelivererVM extends ViewModel {
     public ObservableField<String> getId() {
         return id;
     }
+
+    public ObservableField<String> getTime() {
+        return name; // TODO: 2/18/2018 change these
+    }
+
+    public ObservableField<String> getDescription() {
+        return name;
+    }
+
+    public ObservableField<String> getCountry() {
+        return name;
+    }
 }

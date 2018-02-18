@@ -3,10 +3,12 @@ package com.kurye.kurye.screen.selectDeliverer;
 import android.app.Application;
 import android.arch.lifecycle.AndroidViewModel;
 import android.databinding.ObservableArrayList;
+import android.databinding.ObservableInt;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
+import com.kurye.kurye.common.ViewUtils;
 import com.kurye.kurye.entity.request.CreateOrderRequest;
 import com.kurye.kurye.entity.request.SearchDeliverersRequest;
 import com.kurye.kurye.entity.response.DelivererEntity;
@@ -23,13 +25,18 @@ import java.util.List;
  */
 
 public class VMSelectDeliverer extends AndroidViewModel {
-    private final RecyclerView.OnScrollListener scrollListener;
+    private RecyclerView.OnScrollListener scrollListener;
     private ObservableArrayList<DelivererVM> deliverers = new ObservableArrayList<>();
+    private ObservableInt position = new ObservableInt();
+    private ObservableInt communication = new ObservableInt();
 
     public VMSelectDeliverer(@NonNull Application application) {
         super(application);
         List<DelivererEntity> load = FilterTask.getInstance().load();
         List<DelivererVM> list = new ArrayList<>();
+        if (load==null||load.isEmpty()) {
+            return;
+        }
         DelivererVM vm = new DelivererVM(load.get(0).getFirstName() + " " + load.get(0).getLastName(), load.get(0).getRoute(), load.get(0).getId());
         list.add(vm);
         deliverers.addAll(list);
@@ -37,16 +44,12 @@ public class VMSelectDeliverer extends AndroidViewModel {
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                 if (newState == RecyclerView.SCROLL_STATE_IDLE) {
-                    onActiveCardChange(
+                    position.set(
                             ((CardSliderLayoutManager) recyclerView.getLayoutManager())
                                     .getActiveCardPosition());
                 }
             }
         };
-    }
-
-    private void onActiveCardChange(int activeCardPosition) {
-
     }
 
     public RecyclerView.OnScrollListener getScrollListener() {
@@ -57,15 +60,32 @@ public class VMSelectDeliverer extends AndroidViewModel {
         return deliverers;
     }
 
+    public ObservableInt getPosition() {
+        return position;
+    }
+
     public void performChoose(View view) {
         CreateOrderRequest createOrderRequest = new CreateOrderRequest();
         SearchDeliverersRequest searchDeliverersRequest = FilterTask.getInstance().getSearchDeliverersRequest();
         createOrderRequest.setItemId(searchDeliverersRequest.getItemID());
         createOrderRequest.setDeliveryDate(FilterTask.getInstance().load().get(0).getDeliveryDate());
-        createOrderRequest.setCustomerID("1");
+        createOrderRequest.setCustomerID("5a8950f45b9fa82aa90664ff");
         createOrderRequest.setDelivererID(deliverers.get(0).getId().get());
         OrderTask.getInstance().fetch(createOrderRequest, (status, message) -> {
-            System.out.println("VMSelectDeliverer.performChoose");
+            if (status==OrderTask.SUCCESS){
+                ViewUtils.showAlertDialog(getApplication(), "Success", (dialog, which) -> {
+                    communication.set(1);
+                });
+            } else {
+                ViewUtils.showAlertDialog(getApplication(), message, (dialog, which) -> {
+                    communication.set(1);
+                });
+
+            }
         });
+    }
+
+    public ObservableInt getCommunication() {
+        return communication;
     }
 }

@@ -180,9 +180,12 @@ public class FilterActivityFragment extends Fragment {
 
     private void sendFilterRequest() {
         FilterTask.getInstance().fetch(searchDeliverersRequest, (status, message) -> {
-            System.out.println("FilterActivityFragment.sendFilterRequest " + message+ ","+ status);
-            SelectDelivererActivity.start(getContext());
-            getActivity().finish();
+            if (status==FilterTask.SUCCESS){
+                SelectDelivererActivity.start(getContext());
+                getActivity().finish();
+            } else {
+                ViewUtils.showAlertDialog(getContext(), message, (dialog, which) -> getActivity().finish());
+            }
         });
     }
 }

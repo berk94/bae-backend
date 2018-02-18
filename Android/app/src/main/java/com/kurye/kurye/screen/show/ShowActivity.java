@@ -5,16 +5,11 @@ import android.animation.ObjectAnimator;
 import android.arch.lifecycle.ViewModelProviders;
 import android.databinding.DataBindingUtil;
 import android.databinding.Observable;
-import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.StyleRes;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
-import android.view.Gravity;
-import android.view.View;
 import android.widget.TextSwitcher;
 import android.widget.TextView;
-import android.widget.ViewSwitcher;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -24,6 +19,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.kurye.kurye.R;
+import com.kurye.kurye.common.view.TextViewFactory;
 import com.kurye.kurye.databinding.ActivityShowBinding;
 
 public class ShowActivity extends AppCompatActivity implements OnMapReadyCallback {
@@ -73,17 +69,17 @@ public class ShowActivity extends AppCompatActivity implements OnMapReadyCallbac
     private void initSwitchers() {
 
         placeSwitcher = (TextSwitcher) findViewById(R.id.ts_place);
-        placeSwitcher.setFactory(new TextViewFactory(R.style.PlaceTextView, false));
+        placeSwitcher.setFactory(new TextViewFactory(this, R.style.PlaceTextView, false));
         placeSwitcher.setCurrentText(vmShowActivity.getOrders().get(0).getPlace().get());
 
         clockSwitcher = (TextSwitcher) findViewById(R.id.ts_clock);
-        clockSwitcher.setFactory(new TextViewFactory(R.style.ClockTextView, false));
+        clockSwitcher.setFactory(new TextViewFactory(this, R.style.ClockTextView, false));
         clockSwitcher.setCurrentText(vmShowActivity.getOrders().get(0).getTime().get());
 
         descriptionsSwitcher = (TextSwitcher) findViewById(R.id.ts_description);
         descriptionsSwitcher.setInAnimation(this, android.R.anim.fade_in);
         descriptionsSwitcher.setOutAnimation(this, android.R.anim.fade_out);
-        descriptionsSwitcher.setFactory(new TextViewFactory(R.style.DescriptionTextView, false));
+        descriptionsSwitcher.setFactory(new TextViewFactory(this, R.style.DescriptionTextView, false));
         descriptionsSwitcher.setCurrentText(vmShowActivity.getOrders().get(0).getDescription().get());
     }
 
@@ -173,37 +169,6 @@ public class ShowActivity extends AppCompatActivity implements OnMapReadyCallbac
                 .anchor(0, -1.0f);
         currentMarker = mMap.addMarker(position);
         mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(newPlace, 7));
-    }
-
-    private class TextViewFactory implements ViewSwitcher.ViewFactory {
-
-        @StyleRes
-        final int styleId;
-        final boolean center;
-
-        TextViewFactory(@StyleRes int styleId, boolean center) {
-            this.styleId = styleId;
-            this.center = center;
-        }
-
-        @SuppressWarnings("deprecation")
-        @Override
-        public View makeView() {
-            final TextView textView = new TextView(ShowActivity.this);
-
-            if (center) {
-                textView.setGravity(Gravity.CENTER);
-            }
-
-            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
-                textView.setTextAppearance(ShowActivity.this, styleId);
-            } else {
-                textView.setTextAppearance(styleId);
-            }
-
-            return textView;
-        }
-
     }
 
     @Override
