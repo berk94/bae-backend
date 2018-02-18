@@ -118,37 +118,52 @@ exports.search_deliverers = function(req, res) {
     match_capacity['weightCapacity']={$gte:item.weight};
     match_capacity['volumeCapacity']={$gte:item.volume};
 
-    const startDate = req.body.startDate;
-    const endDate = req.body.endDate;
+    const startDate = new Date(req.body.startDate);
+    const endDate = new Date(req.body.endDate);
     const fromLocationID = req.body.fromLocationID;
     const toLocationID = req.body.toLocationID;
 
     Deliverer.aggregate([
           { // first, filter by capacity to reduce the result set
             $match: match_capacity
-          }//,
-          // { // define some vars to use in the next match
-          //   $project:{
-          //     fromLocationIndex: { matchedIndex: { $indexOfArray: [ "$route", {place: {googlePlacesID: fromLocationID}} ] } },
-          //     toLocationIndex: { matchedIndex: { $indexOfArray: [ "$route", {place: {googlePlacesID: toLocationID}} ] } }
-          //     //toLocationDate: { $arrayElemAt: [ "$route", toLocationIndex ] }['date'],
-          //   }
-          // }
-          // { // finally, filter by location and date
-          //   $match: {
-          //     fromLocationIndex: {$lt: toLocationIndex},
-          //     // toLocationDate: {$gte: startDate},
-          //     // toLocationDate: {$lte: endDate}
-          //   }
-          // },
-          // { // then, get the fields to be shown
-          //   $project:{
-          //     firstName: "$firstName",
-          //     lastName: "$lastName",
-          //     _id:0
-          //   }
-          // }
-          // optionally, set a limit for the records to be fetched.
+          },
+          { // define some vars to use in the next match
+            $addFields:{
+              fromLocationIndex: { $indexOfArray: [ "$route.place.googlePlacesID",  fromLocationID ] },
+              toLocationIndex:  { $indexOfArray: [ "$route.place.googlePlacesID",  toLocationID ] } ,
+            }
+          },
+          { // define some vars to use in the next match
+            $addFields:{
+              toLocationDate: { $arrayElemAt: [ "$route.date", "$toLocationIndex" ] },
+              locationValid: { $lt:["$fromLocationIndex","$toLocationIndex"] }
+            }
+          },
+          { // define some vars to use in the next match
+            $addFields:{
+              dateValid: {
+                $and: [
+                  {$gte:["$toLocationDate", startDate]},
+                  {$lte:["$toLocationDate", endDate]}
+                ]
+              },
+            }
+          },
+          { // finally, filter by location and date
+            $match: {
+              locationValid: true,
+              dateValid: true
+            }
+          },
+          { // then, get the fields to be shown
+            $project:{
+              firstName: "$firstName",
+              lastName: "$lastName",
+              route: "$route",
+              deliveryDate: "$toLocationDate"
+            }
+          }
+          // optionally, set a limit for the records to be fetched. (use with skip for cursoring)
           // uncomment the part below to activate
           // ,
           // {
