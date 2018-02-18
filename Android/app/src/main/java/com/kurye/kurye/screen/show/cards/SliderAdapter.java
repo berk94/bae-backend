@@ -7,11 +7,12 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.kurye.kurye.R;
+import com.kurye.kurye.viewEntity.OrderVM;
 
 public class SliderAdapter extends RecyclerView.Adapter<SliderCard> {
-    private final int[] content;
+    private OrderVM[] content;
 
-    public SliderAdapter(int[] content) {
+    public SliderAdapter(OrderVM[] content) {
         this.content = content;
     }
 
@@ -26,12 +27,7 @@ public class SliderAdapter extends RecyclerView.Adapter<SliderCard> {
 
     @Override
     public void onBindViewHolder(SliderCard holder, int position) {
-        holder.setContent(content[position]);
-    }
-
-    @Override
-    public void onViewRecycled(SliderCard holder) {
-        holder.clearContent();
+        holder.setContent(content[position].getPicture().get());
     }
 
     @Override

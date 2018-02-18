@@ -31,9 +31,8 @@ import com.ramotion.cardslider.CardSnapHelper;
 public class ShowActivity extends AppCompatActivity implements OnMapReadyCallback {
     private GoogleMap mMap;
     private OrderVM[] vms;
+    private SliderAdapter sliderAdapter;
 
-    private final int[] pics = {R.drawable.p2, R.drawable.p2, R.drawable.p3, R.drawable.p4, R.drawable.p5};
-    private final SliderAdapter sliderAdapter = new SliderAdapter(pics);
 
     private TextSwitcher placeSwitcher;
     private TextSwitcher clockSwitcher;
@@ -59,6 +58,8 @@ public class ShowActivity extends AppCompatActivity implements OnMapReadyCallbac
                 new OrderVM("Temple of Heaven", "Mar 8 - May 21    7:00-18:00", "BEIJING", getString(R.string.text4), ContextCompat.getDrawable(this, R.drawable.p4)),
                 new OrderVM("Aegeana Sea", "Mar 10 - May 21    7:00-18:00", "THIRA", getString(R.string.text5), ContextCompat.getDrawable(this, R.drawable.p5))
         };
+        sliderAdapter = new SliderAdapter(vms);
+
         setContentView(R.layout.activity_show);
         initMap();
         initRecyclerView();
