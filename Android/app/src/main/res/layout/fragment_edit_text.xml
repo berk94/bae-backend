@@ -1,0 +1,17 @@
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <variable
+            name="vm"
+            type="com.kurye.kurye.screen.filter.editText.VMEditTextFragment" />
+    </data>
+
+    <AutoCompleteTextView
+        style="@style/etNumber"
+        android:enabled="@{vm.enabled}"
+        android:hint="@{vm.hint}"
+        android:text="@{vm.text}"
+        app:textAdapter="@{vm.adapter}" />
+</layout>

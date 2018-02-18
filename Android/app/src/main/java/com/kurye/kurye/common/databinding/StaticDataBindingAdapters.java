@@ -3,6 +3,8 @@ package com.kurye.kurye.common.databinding;
 import android.databinding.BindingAdapter;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.RecyclerView;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 
 import com.appeaser.sublimepickerlibrary.datepicker.SublimeDatePicker;
 
@@ -36,5 +38,10 @@ public class StaticDataBindingAdapters {
     @BindingAdapter("divider")
     public static void addDivider(RecyclerView rv, DividerItemDecoration itemDecoration){
         rv.addItemDecoration(itemDecoration);
+    }
+
+    @BindingAdapter("textAdapter")
+    public static void addTextAdapter(AutoCompleteTextView autoCompleteTextView, ArrayAdapter<String> adapter) {
+        autoCompleteTextView.setAdapter(adapter);
     }
 }
