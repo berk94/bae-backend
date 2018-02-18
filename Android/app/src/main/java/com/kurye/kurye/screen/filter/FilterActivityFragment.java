@@ -14,7 +14,7 @@ import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlaceSelectionListener;
 import com.google.android.gms.location.places.ui.SupportPlaceAutocompleteFragment;
 import com.kurye.kurye.R;
-import com.kurye.kurye.entity.response.LocationEntity;
+import com.kurye.kurye.entity.response.PlaceEntity;
 import com.kurye.kurye.screen.filter.dateRange.DateRangeFragment;
 import com.kurye.kurye.screen.filter.editText.EditTextFragment;
 
@@ -31,8 +31,8 @@ public class FilterActivityFragment extends Fragment {
     private SteppersView steppersView;
 
     private String itemID;
-    private LocationEntity fromLocation;
-    private LocationEntity toLocation;
+    private PlaceEntity fromLocation;
+    private PlaceEntity toLocation;
     private String date;
 
     public FilterActivityFragment() {

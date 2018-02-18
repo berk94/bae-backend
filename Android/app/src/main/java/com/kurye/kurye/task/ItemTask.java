@@ -4,7 +4,7 @@ import android.support.annotation.IntDef;
 import android.support.annotation.NonNull;
 
 import com.kurye.kurye.entity.response.ItemEntity;
-import com.kurye.kurye.entity.response.ItemResponse;
+import com.kurye.kurye.entity.response.BaseResponse;
 import com.kurye.kurye.network.NetworkApi;
 import com.kurye.kurye.network.NetworkCallback;
 
@@ -36,9 +36,9 @@ public class ItemTask {
     }
 
     public void fetch(@NonNull SearchResultListener listener) {
-        NetworkApi.getInstance().getItems(new NetworkCallback<ItemResponse>() {
+        NetworkApi.getInstance().getItems(new NetworkCallback<BaseResponse<List<ItemEntity>>>() {
             @Override
-            public void onSuccess(ItemResponse response) {
+            public void onSuccess(BaseResponse<List<ItemEntity>> response) {
                 if (response == null || response.getCode() != 200) {
                     listener.onResult(FAIL,"No Matching Results");
                 } else {

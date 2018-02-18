@@ -2,7 +2,10 @@ package com.kurye.kurye.network;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.kurye.kurye.entity.response.ItemResponse;
+import com.kurye.kurye.entity.response.BaseResponse;
+import com.kurye.kurye.entity.response.ItemEntity;
+
+import java.util.List;
 
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
@@ -51,7 +54,7 @@ public class NetworkApi {
         return instance;
     }
 
-    public void getItems(NetworkCallback<ItemResponse> callback) {
+    public void getItems(NetworkCallback<BaseResponse<List<ItemEntity>>> callback) {
         sendRequest(service.getItems(), callback);
     }
 

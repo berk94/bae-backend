@@ -7,16 +7,16 @@ public class RecordEntity {
 
     @SerializedName("_id")
     @Expose
-    private LocationEntity location;
+    private PlaceEntity location;
     @SerializedName("totalCount")
     @Expose
     private int totalCount;
 
-    public LocationEntity getLocation() {
+    public PlaceEntity getLocation() {
         return location;
     }
 
-    public void setLocation(LocationEntity location) {
+    public void setLocation(PlaceEntity location) {
         this.location = location;
     }
 
