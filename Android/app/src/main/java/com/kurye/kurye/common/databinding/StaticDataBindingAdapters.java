@@ -46,7 +46,7 @@ public class StaticDataBindingAdapters {
     }
 
     @BindingAdapter("textAdapter")
-    public static void addTextAdapter(AutoCompleteTextView autoCompleteTextView, ArrayAdapter<String> adapter) {
+    public static void addTextAdapter(AutoCompleteTextView autoCompleteTextView, ArrayAdapter adapter) {
         autoCompleteTextView.setAdapter(adapter);
     }
 }

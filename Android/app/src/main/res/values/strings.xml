@@ -20,6 +20,8 @@
     <string name="select_to_city_label">Nereye</string>
     <string name="select_time_label">Ne Zaman</string>
     <string name="select_time_description">Bugün, yarın...</string>
+    <string name="finish_label">Tebrikler</string>
+    <string name="finish_description">Tamamladın</string>
 
     <string name="text1">The museum is housed in the Louvre Palace, originally built as a fortress in the late 12th century…</string>
     <string name="text2">Gwanghwamun is the main and largest gate of Gyeongbokgung Palace, in Jongno-gu, Seoul, South Korea.</string>

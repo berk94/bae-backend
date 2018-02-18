@@ -3,18 +3,20 @@ package com.kurye.kurye.screen.filter;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
-import android.util.Log;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.appeaser.sublimepickerlibrary.datepicker.SelectedDate;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.places.AutocompleteFilter;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlaceSelectionListener;
 import com.google.android.gms.location.places.ui.SupportPlaceAutocompleteFragment;
 import com.kurye.kurye.R;
-import com.kurye.kurye.entity.response.PlaceEntity;
+import com.kurye.kurye.common.DateUtils;
+import com.kurye.kurye.common.ViewUtils;
 import com.kurye.kurye.screen.filter.dateRange.DateRangeFragment;
 import com.kurye.kurye.screen.filter.editText.EditTextFragment;
 
@@ -22,18 +24,20 @@ import java.util.ArrayList;
 
 import me.drozdzynski.library.steppers.SteppersItem;
 import me.drozdzynski.library.steppers.SteppersView;
+import me.drozdzynski.library.steppers.interfaces.OnFinishAction;
 
 /**
  * A placeholder fragment containing a simple view.
  */
 public class FilterActivityFragment extends Fragment {
 
-    private SteppersView steppersView;
-
     private String itemID;
-    private PlaceEntity fromLocation;
-    private PlaceEntity toLocation;
-    private String date;
+    private String toLocationId;
+    private String fromLocationId;
+    private String startDate;
+    private String endDate;
+    private SteppersView steppersView;
+    private OnFinishAction onFinishAction;
 
     public FilterActivityFragment() {
     }
@@ -42,90 +46,138 @@ public class FilterActivityFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_filter, container, false);
-
-        steppersView = v.findViewById(R.id.steppersView);
-        steppersView.setConfig(getConfig());
-        steppersView.setItems(getStepperItems());
-        steppersView.build();
-
+        setupSteppersView(v);
         return v;
     }
 
-    @NonNull
-    private ArrayList<SteppersItem> getStepperItems() {
-        ArrayList<SteppersItem> steps = new ArrayList<>();
-
-        SteppersItem stepFirst = new SteppersItem();
-        stepFirst.setLabel(getString(R.string.select_item_label));
-        stepFirst.setSubLabel(getString(R.string.select_item_description));
-
-        stepFirst.setFragment(EditTextFragment.newInstance(getString(R.string.select_item_question)));
-        stepFirst.setPositiveButtonEnable(true);
-        steps.add(stepFirst);
-
-        SteppersItem stepSecond = new SteppersItem();
-        stepSecond.setLabel(getString(R.string.select_from_city_label));
-        stepSecond.setSubLabel(getString(R.string.select_city_description));
-
-        SupportPlaceAutocompleteFragment fragmentFrom = new SupportPlaceAutocompleteFragment();
-        AutocompleteFilter typeFilterFrom = new AutocompleteFilter.Builder().setTypeFilter(AutocompleteFilter.TYPE_FILTER_CITIES).build();
-        fragmentFrom.setFilter(typeFilterFrom);
-        stepSecond.setFragment(fragmentFrom);
-        fragmentFrom.setOnPlaceSelectedListener(new PlaceSelectionListener() {
-            @Override
-            public void onPlaceSelected(Place place) {
-                Log.e("id", place.getId());
-                Log.e("long", "" + place.getLatLng().longitude);
-                Log.e("lat", "" + place.getLatLng().latitude);
-            }
-
-            @Override
-            public void onError(Status status) {
-
-            }
-        });
-        stepSecond.setPositiveButtonEnable(true);
-        steps.add(stepSecond);
-
-        SteppersItem stepThird = new SteppersItem();
-        stepThird.setLabel(getString(R.string.select_to_city_label));
-        stepThird.setSubLabel(getString(R.string.select_city_description));
-
-        SupportPlaceAutocompleteFragment fragmentTo = new SupportPlaceAutocompleteFragment();
-        AutocompleteFilter typeFilterTo = new AutocompleteFilter.Builder().setTypeFilter(AutocompleteFilter.TYPE_FILTER_CITIES).build();
-        fragmentTo.setFilter(typeFilterTo);
-        stepThird.setFragment(fragmentTo);
-        stepThird.setPositiveButtonEnable(true);
-        steps.add(stepThird);
-
-        SteppersItem stepFourth = new SteppersItem();
-        stepFourth.setLabel(getString(R.string.select_time_label));
-        stepFourth.setSubLabel(getString(R.string.select_time_description));
-        stepFourth.setFragment(DateRangeFragment.newInstance());
-        stepFourth.setPositiveButtonEnable(true);
-
-        steps.add(stepFourth);
-        return steps;
+    private void setupSteppersView(View v) {
+        steppersView = v.findViewById(R.id.steppersView);
+        steppersView.setItems(getStepperItems());
+        steppersView.setConfig(getConfig());
+        steppersView.build();
     }
 
     @NonNull
     private SteppersView.Config getConfig() {
         SteppersView.Config steppersViewConfig = new SteppersView.Config();
-        steppersViewConfig.setOnFinishAction(() -> {
-            // Action on last step Finish button
-        });
-
-        steppersViewConfig.setOnCancelAction(() -> {
-            // Action when click cancel on one of steps
-            getActivity().finish();
-        });
-
-        steppersViewConfig.setOnChangeStepAction((position, activeStep) -> {
-            // Action when click continue on each step
-        });
-
-        // Setup Support Fragment Manager for fragments in steps
         steppersViewConfig.setFragmentManager(getChildFragmentManager());
+        steppersViewConfig.setCancelAvailable(false);
+        steppersViewConfig.setOnFinishAction(onFinishAction);
         return steppersViewConfig;
+    }
+
+    @NonNull
+    private ArrayList<SteppersItem> getStepperItems() {
+        AutocompleteFilter typeFilter = new AutocompleteFilter.Builder().setTypeFilter(AutocompleteFilter.TYPE_FILTER_CITIES).build();
+        ArrayList<SteppersItem> steps = new ArrayList<>();
+        steps.add(getStepFirst());
+        steps.add(getStepSecond(typeFilter));
+        steps.add(getStepThird(typeFilter));
+        steps.add(getStepFourth());
+        return steps;
+    }
+
+    @NonNull
+    private SteppersItem getStepFirst() {
+        SteppersItem stepFirst = new SteppersItem();
+        stepFirst.setLabel(getString(R.string.select_item_label));
+        stepFirst.setSubLabel(getString(R.string.select_item_description));
+
+        EditTextFragment editTextFragment = EditTextFragment.newInstance(getString(R.string.select_item_question));
+        editTextFragment.setListener(entity -> itemID = entity.getId());
+        stepFirst.setFragment(editTextFragment);
+        stepFirst.setOnClickContinue(() -> {
+            if (TextUtils.isEmpty(itemID)) {
+                ViewUtils.getSnackbar(getActivity(), "Ne almak istediğini bilmeden sana yardımcı olamam :)").show();
+            } else {
+                steppersView.nextStep();
+            }
+        });
+        return stepFirst;
+    }
+
+    @NonNull
+    private SteppersItem getStepSecond(AutocompleteFilter typeFilter) {
+        SteppersItem stepSecond = new SteppersItem();
+        stepSecond.setLabel(getString(R.string.select_from_city_label));
+        stepSecond.setSubLabel(getString(R.string.select_city_description));
+
+        SupportPlaceAutocompleteFragment fragmentFrom = new SupportPlaceAutocompleteFragment();
+        fragmentFrom.setFilter(typeFilter);
+        fragmentFrom.setOnPlaceSelectedListener(new PlaceSelectionListener() {
+            @Override
+            public void onPlaceSelected(Place place) {
+                fromLocationId = place.getId();
+            }
+
+            @Override
+            public void onError(Status status) {
+                fromLocationId = null;
+            }
+        });
+        stepSecond.setFragment(fragmentFrom);
+        stepSecond.setOnClickContinue(() -> {
+            if (TextUtils.isEmpty(fromLocationId)) {
+                ViewUtils.getSnackbar(getActivity(), "Nereden almak istediğini bilmeden sana yardımcı olamam :)").show();
+            } else {
+                steppersView.nextStep();
+            }
+        });
+        return stepSecond;
+    }
+
+    @NonNull
+    private SteppersItem getStepThird(AutocompleteFilter typeFilter) {
+        SteppersItem stepThird = new SteppersItem();
+        stepThird.setLabel(getString(R.string.select_to_city_label));
+        stepThird.setSubLabel(getString(R.string.select_city_description));
+
+        SupportPlaceAutocompleteFragment fragmentTo = new SupportPlaceAutocompleteFragment();
+        fragmentTo.setFilter(typeFilter);
+        fragmentTo.setOnPlaceSelectedListener(new PlaceSelectionListener() {
+            @Override
+            public void onPlaceSelected(Place place) {
+                toLocationId = place.getId();
+            }
+
+            @Override
+            public void onError(Status status) {
+                toLocationId = null;
+            }
+        });
+        stepThird.setFragment(fragmentTo);
+        stepThird.setOnClickContinue(() -> {
+            if (TextUtils.isEmpty(toLocationId)) {
+                ViewUtils.getSnackbar(getActivity(), "Nereye almak istediğini bilmeden sana yardımcı olamam :)").show();
+            } else {
+                steppersView.nextStep();
+            }
+        });
+        return stepThird;
+    }
+
+    @NonNull
+    private SteppersItem getStepFourth() {
+        SteppersItem stepFourth = new SteppersItem();
+        stepFourth.setLabel(getString(R.string.select_time_label));
+        stepFourth.setSubLabel(getString(R.string.select_time_description));
+        DateRangeFragment dateRangeFragment = DateRangeFragment.newInstance();
+        stepFourth.setFragment(dateRangeFragment);
+        onFinishAction = () -> {
+            SelectedDate date = dateRangeFragment.getDate();
+            startDate = DateUtils.formatDateToString(date.getStartDate());
+            endDate = DateUtils.formatDateToString(date.getEndDate());
+
+            if (TextUtils.isEmpty(startDate) || TextUtils.isEmpty(startDate)) {
+                ViewUtils.getSnackbar(getActivity(), "Ne zaman almak istediğini bilmeden sana yardımcı olamam :)").show();
+            } else {
+                sendFilterRequest();
+            }
+        };
+        return stepFourth;
+    }
+
+    private void sendFilterRequest() {
+
     }
 }
