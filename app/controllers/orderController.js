@@ -13,7 +13,7 @@ exports.order_list = function(req, res) {
 
 // Display detail page for a specific order.
 exports.order_detail = function(req, res) {
-  Order.findById(req.params.id, function(err,data){
+  Order.findById(req.params.orderID, function(err,data){
     var response = new Response;
     response.sendResponse(res, err, data);
   });
@@ -23,6 +23,9 @@ exports.order_detail = function(req, res) {
 exports.order_create = function(req, res) {
   const order = new Order(req.body);
   order.save(function(err, data) {
+    if (!err) {
+      // decrease deliverer's remaining weight and volume capacities
+    }
     var response = new Response;
     response.sendResponse(res, err, data);
   });
@@ -39,6 +42,10 @@ exports.delete_all = function(req, res) {
 
 // Delete a specific order
 exports.delete = function(req, res) {
+  // get item from order
+  // get deliverer from order
+  // increase deliverer's remaining weight and volume capacities
+
   Order.findByIdAndRemove (req.params.id, function(err,data){
     var response = new Response;
     response.sendResponse(res, err, data);

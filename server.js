@@ -14,6 +14,18 @@ app.use(bodyParser.json());
 const mongoose = require('mongoose');
 mongoose.connect(mongo.url);
 
+// To solve the "Can't set headers after they are sent problem"
+app.use(function(req,res,next){
+    var _send = res.send;
+    var sent = false;
+    res.send = function(data){
+        if(sent) return;
+        _send.bind(res)(data);
+        sent = true;
+    };
+    next();
+});
+
 const db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));
 db.once('open', function() {

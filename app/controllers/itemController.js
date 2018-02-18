@@ -13,7 +13,8 @@ exports.item_list = function(req, res) {
 
 // Display detail page for a specific item.
 exports.item_detail = function(req, res) {
-  Item.findById(req.params.id, function(err,data){
+  console.log("Getting item...")
+  Item.findById(req.params.itemID, function(err,data){
     var response = new Response;
     response.sendResponse(res, err, data);
   });

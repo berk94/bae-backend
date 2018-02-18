@@ -12,6 +12,7 @@ responseSchema.methods.sendResponse = function(res, err, data) {
     else {
       res.send({'code':200, 'data':data});
     }
+    res.end();
   };
 
 module.exports = mongoose.model('Response', responseSchema);

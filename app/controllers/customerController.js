@@ -13,7 +13,7 @@ exports.customer_list = function(req, res) {
 
 // Display detail page for a specific customer.
 exports.customer_detail = function(req, res) {
-  Customer.findById(req.params.id, function(err,data){
+  Customer.findById(req.params.customerID, function(err,data){
     var response = new Response;
     response.sendResponse(res, err, data);
   });
