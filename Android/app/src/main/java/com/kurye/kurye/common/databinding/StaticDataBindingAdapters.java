@@ -7,6 +7,7 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 
 import com.appeaser.sublimepickerlibrary.datepicker.SublimeDatePicker;
+import com.ramotion.cardslider.CardSnapHelper;
 
 import java.util.List;
 
@@ -16,8 +17,8 @@ public class StaticDataBindingAdapters {
         p.init(null, canPickRange, null);
     }
 
-    @BindingAdapter(value = {"itemList", "itemLayout"}, requireAll = true)
-    public static <T> void createAdapter(RecyclerView rv, List<T> items, int itemLayout) {
+    @BindingAdapter(value = {"itemList", "itemLayout","scrollListener"}, requireAll = true)
+    public static <T> void createAdapter(RecyclerView rv, List<T> items, int itemLayout, RecyclerView.OnScrollListener scrollListener) {
         if (rv.getAdapter() == null) {
             rv.setAdapter(new BaseAdapter<T>(items) {
                 @Override
@@ -35,6 +36,9 @@ public class StaticDataBindingAdapters {
                     return itemList == null ? 0 : itemList.size();
                 }
             });
+            rv.addOnScrollListener(scrollListener);
+            new CardSnapHelper().attachToRecyclerView(rv);
+
         } else {
             ((BaseAdapter<T>) rv.getAdapter()).updateData(items);
         }

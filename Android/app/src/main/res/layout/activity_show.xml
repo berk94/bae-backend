@@ -74,6 +74,8 @@
             android:layout_marginStart="@dimen/recycler_view_left_offset"
             android:clipChildren="false"
             android:overScrollMode="never"
+            app:hasFixedSize="@{true}"
+            app:scrollListener="@{vmShow.scrollListener}"
             app:itemList="@{vmShow.orders}"
             app:itemLayout="@{@layout/layout_slider_card}"
             tools:listitem="@layout/layout_slider_card"

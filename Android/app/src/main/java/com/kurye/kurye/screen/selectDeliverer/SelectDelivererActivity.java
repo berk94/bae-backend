@@ -23,7 +23,6 @@ public class SelectDelivererActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ActivitySelectDelivererBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_select_deliverer);
-        setSupportActionBar(binding.toolbar);
         binding.executePendingBindings();
     }
 }
