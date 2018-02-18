@@ -7,11 +7,11 @@ const Deliverer = require('./deliverer');
 const Customer = require('./customer');
 
 var orderSchema = new Schema({
- itemID: {type: Schema.Types.ObjectId, ref: "Item"},
- delivererID: {type: Schema.Types.ObjectId, ref: "Deliverer"},
- customerID: {type: Schema.Types.ObjectId, ref: "Customer"},
+ itemID: {type: Schema.Types.ObjectId, ref: "Item", required: [true, 'itemID is required.']},
+ delivererID: {type: Schema.Types.ObjectId, ref: "Deliverer", required: [true, 'delivererID is required.']},
+ customerID: {type: Schema.Types.ObjectId, ref: "Customer", required: [true, 'customerID is required.']},
  startDate: {type: Date, required: [true, 'startDate is required.']},
- endDate: {type: Date, required: [true, 'startDate is required.']},
+ endDate: {type: Date, required: [true, 'endDate is required.']},
  createdAt: { type: Date, default: Date.now }
 });
 
