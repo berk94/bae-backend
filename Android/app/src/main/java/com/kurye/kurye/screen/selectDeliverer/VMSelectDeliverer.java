@@ -34,7 +34,7 @@ public class VMSelectDeliverer extends AndroidViewModel {
         return deliverers;
     }
 
-    public void performAdd(View view) {
+    public void performChoose(View view) {
         FilterActivity.start(view.getContext());
     }
 }
